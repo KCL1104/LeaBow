@@ -6,6 +6,14 @@ body {
   min-height: 500px;
   background-color: #FFFFFF;
   color: #000000;
+  padding-bottom: 60px; /* Space for bottom navigation */
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  padding-bottom: 60px; /* Space for bottom navigation */
 }
 
 #root {
@@ -311,7 +319,55 @@ body {
   margin-bottom: 16px;
 }
 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  padding-bottom: 60px; /* Space for bottom navigation */
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Bottom Navigation Panel */
+.bottom-nav-panel {
+  display: flex;
+  justify-content: space-around;
+  background-color: #000000;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 8px 0;
+  border-top: 2px solid #FFFFFF;
+}
+
+.bottom-nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 6px 0;
+  width: 33.33%;
+}
+
+.bottom-nav-button.active {
+  background-color: #333333;
+  border-radius: 4px;
+}
+
+.bottom-nav-icon {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.bottom-nav-label {
+  font-size: 12px;
+  font-weight: 500;
 }

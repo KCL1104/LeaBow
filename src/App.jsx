@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
+import BottomNavPanel from './components/BottomNavPanel';
+import Header from './components/Header';
+import BalanceCard from './components/BalanceCard';
+import ActionButtons from './components/ActionButtons';
+import TabNavigation from './components/TabNavigation';
+import TransactionList from './components/TransactionList';
+import TokenList from './components/TokenList';
+import SettingsPanel from './components/SettingsPanel';
+import Trade from './Trade';
+import Explorer from './Explorer';
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('transactions');
+  const [currentPage, setCurrentPage] = useState('assets');
   
   // Mock data
   const walletData = {
@@ -26,95 +37,66 @@ const App = () => {
     setActiveTab(tab);
   };
 
+  const handleNavigation = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Render different pages based on current selection
+  if (currentPage === 'trade') {
+    return <Trade onNavigate={handleNavigation} />;
+  }
+
+  if (currentPage === 'explorer') {
+    return <Explorer onNavigate={handleNavigation} />;
+  }
+
+  // Main Assets page (default)
   return (
-    <div>
+    <div className="app-container">
       {/* Header */}
-      <div className="header">
-        <h1 style={{ margin: 0, fontSize: '24px' }}>Smart Wallet</h1>
-        <div style={{ fontSize: '14px' }}>{walletData.address}</div>
-      </div>
+      <Header address={walletData.address} />
 
       {/* Balance */}
-      <div className="balance-section">
-        <div style={{ color: '#000000', fontSize: '14px', marginBottom: '8px' }}>Total Balance</div>
-        <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#000000' }}>
-          {walletData.balance.toFixed(4)} <span style={{ fontSize: '14px' }}>ETH</span>
-        </div>
-      </div>
+      <BalanceCard balance={walletData.balance} />
 
       {/* Action Buttons */}
-      <div className="actions">
-        <button 
-          className="action-button"
-          onClick={handleSendClick}
-        >
-          Send
-        </button>
-        <button 
-          className="action-button"
-          onClick={handleReceiveClick}
-        >
-          Receive
-        </button>
-      </div>
+      <ActionButtons
+        onSendClick={handleSendClick}
+        onReceiveClick={handleReceiveClick}
+      />
 
       {/* Tabs */}
-      <div className="nav-tabs">
-        <div 
-          className={`nav-tab ${activeTab === 'transactions' ? 'active' : ''}`}
-          onClick={() => handleTabClick('transactions')}
-        >
-          Activity
-        </div>
-        <div 
-          className={`nav-tab ${activeTab === 'tokens' ? 'active' : ''}`}
-          onClick={() => handleTabClick('tokens')}
-        >
-          Tokens
-        </div>
-        <div 
-          className={`nav-tab ${activeTab === 'settings' ? 'active' : ''}`}
-          onClick={() => handleTabClick('settings')}
-        >
-          Settings
-        </div>
-      </div>
+      <TabNavigation
+        activeTab={activeTab}
+        onTabChange={handleTabClick}
+        tabs={[
+          { id: 'transactions', label: 'Activity' },
+          { id: 'tokens', label: 'Tokens' },
+          { id: 'settings', label: 'Settings' }
+        ]}
+      />
 
       {/* Content */}
       {activeTab === 'transactions' && (
-        <div className="transactions">
-          <div className="transactions-header">Transaction History</div>
-          {walletData.transactions.map(tx => (
-            <div key={tx.id} className="transaction-item">
-              <div>
-                <div style={{ fontWeight: '500', color: '#000000' }}>{tx.name}</div>
-                <div style={{ fontSize: '12px', color: '#000000', opacity: 0.7 }}>{tx.date}</div>
-              </div>
-              <div style={{ fontWeight: '600', color: '#000000' }}>
-                {tx.amount > 0 ? '+' : ''}{tx.amount.toFixed(4)} ETH
-              </div>
-            </div>
-          ))}
-        </div>
+        <TransactionList 
+          transactions={walletData.transactions}
+          onTransactionClick={() => {}}
+        />
       )}
 
       {activeTab === 'tokens' && (
-        <div className="transactions">
-          <div className="transactions-header">Tokens</div>
-          <div style={{ padding: '20px', textAlign: 'center' }}>
-            Your tokens will appear here
-          </div>
-        </div>
+        <TokenList />
       )}
 
       {activeTab === 'settings' && (
-        <div className="transactions">
-          <div className="transactions-header">Settings</div>
-          <div style={{ padding: '20px', textAlign: 'center' }}>
-            Settings options will appear here
-          </div>
-        </div>
+        <SettingsPanel />
       )}
+
+      {/* Bottom Navigation Panel */}
+      <BottomNavPanel 
+        activeTab={currentPage} 
+        onTabChange={handleNavigation} 
+      />
     </div>
   );
 };
